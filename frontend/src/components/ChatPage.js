@@ -153,7 +153,7 @@ function ChatPage({ isAuthenticated, onLogout }) {
         onLogout(); // Update parent authentication state
       }
       navigate('/login');
-  }, [navigate, onLogout, socketRef]); // Add all variables/functions used inside handleLogout as its dependencies
+  }, [navigate, onLogout,]); // Add all variables/functions used inside handleLogout as its dependencies
 
   const handleJoinChannel = (channelName) => {
     if (socketRef.current && socketRef.current.connected) {
