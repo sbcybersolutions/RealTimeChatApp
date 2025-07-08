@@ -22,7 +22,7 @@ function Profile() {
             Authorization: `Bearer ${token}`, // Attach the JWT to the Authorization header
           },
         };
-        const response = await axios.get('http://localhost:5000/api/users/profile', config);
+        const response = await axios.get('https://realtimechatapp-pdil.onrender.com/api/users/profile', config);
         setProfileData(response.data);
       } catch (err) {
         console.error('Failed to fetch profile:', err);
