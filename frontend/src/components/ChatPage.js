@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client'; // Import the socket.io client
 import axios from 'axios'; // For fetching channels via HTTP
 
-const SOCKET_SERVER_URL = 'http://localhost:5000'; // Our backend Socket.io URL
+const SOCKET_SERVER_URL = 'https://realtimechatapp-pdil.onrender.com/'; // Our backend Socket.io URL
 
 function ChatPage({ isAuthenticated, onLogout }) {
   const navigate = useNavigate();
