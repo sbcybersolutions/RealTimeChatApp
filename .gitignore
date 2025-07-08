@@ -1,0 +1,22 @@
+# Node.js modules
+node_modules/
+
+# Environment variables
+.env
+
+# Build outputs for frontend (React)
+frontend/build/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
