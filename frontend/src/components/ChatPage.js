@@ -1,5 +1,5 @@
 // frontend/src/components/ChatPage.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client'; // Import the socket.io client
 import axios from 'axios'; // For fetching channels via HTTP
@@ -141,18 +141,19 @@ function ChatPage({ isAuthenticated, onLogout }) {
   }, [messages]);
 
 
-  const handleLogout = () => {
-    if (socketRef.current) {
-      socketRef.current.disconnect(); // Disconnect socket on logout
-    }
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    if (onLogout) {
-      onLogout(); // Update parent authentication state
-    }
-    navigate('/login');
-  };
+  // Define handleLogout using useCallback so it's a stable function reference
+  const handleLogout = useCallback(() => {
+      if (socketRef.current) {
+        socketRef.current.disconnect(); // Disconnect socket on logout
+      }
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      if (onLogout) {
+        onLogout(); // Update parent authentication state
+      }
+      navigate('/login');
+  }, [navigate, onLogout, socketRef]); // Add all variables/functions used inside handleLogout as its dependencies
 
   const handleJoinChannel = (channelName) => {
     if (socketRef.current && socketRef.current.connected) {
