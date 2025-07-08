@@ -31,7 +31,7 @@ const server = http.createServer(app); // Create an HTTP server from Express app
 // Initialize Socket.io server
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:3000", "https://portfoliochatapp.netlify.app/"], // Add your deployed frontend URL here
+        origin: ["http://localhost:3000", "https://portfoliochatapp.netlify.app"], // Add your deployed frontend URL here
         methods: ["GET", "POST"]
     }
 });
@@ -39,7 +39,7 @@ const io = new Server(server, {
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://portfoliochatapp.netlify.app/'], // Add your deployed frontend URL here
+    origin: ['http://localhost:3000', 'https://portfoliochatapp.netlify.app'], // Add your deployed frontend URL here
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ensure all necessary methods are allowed
     credentials: true
 }));
