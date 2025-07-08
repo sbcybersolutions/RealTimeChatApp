@@ -28,9 +28,11 @@ function ChatPage({ isAuthenticated, onLogout }) {
     if (!isAuthenticated) {
       navigate('/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate]); // This useEffect depends on isAuthenticated and navigate
+
 
   // Connect to Socket.io and fetch channels on component mount
+  // This is the useEffect you asked to fix.
   useEffect(() => {
     if (!isAuthenticated || !token) return;
 
@@ -57,8 +59,6 @@ function ChatPage({ isAuthenticated, onLogout }) {
       auth: {
         token: token, // Send JWT for authentication
       },
-      // You might need to add `transports: ['websocket']` if you run into connection issues,
-      // but usually the default `polling` then `websocket` upgrade works fine.
     });
 
     // --- Socket.io Event Listeners ---
@@ -66,7 +66,6 @@ function ChatPage({ isAuthenticated, onLogout }) {
     // General connection events
     socketRef.current.on('connect', () => {
       console.log('Connected to Socket.io server!');
-      // If we already have a current channel, re-join it on reconnect
       if (currentChannel) {
         socketRef.current.emit('joinChannel', currentChannel);
       }
@@ -74,14 +73,14 @@ function ChatPage({ isAuthenticated, onLogout }) {
 
     socketRef.current.on('disconnect', () => {
       console.log('Disconnected from Socket.io server!');
-      setOnlineUsers([]); // Clear online users on disconnect
+      setOnlineUsers([]);
     });
 
     socketRef.current.on('connect_error', (error) => {
         console.error('Socket.io connection error:', error.message);
         if (error.message.includes('Authentication error')) {
             alert('Authentication failed. Please log in again.');
-            handleLogout(); // Force logout on auth failure
+            handleLogout(); // This is the function that was missing!
         }
     });
 
@@ -98,7 +97,6 @@ function ChatPage({ isAuthenticated, onLogout }) {
     // User joined a channel
     socketRef.current.on('userJoined', ({ userId, username, channel }) => {
       if (channel === currentChannel) {
-        // Only add if not already in the list to avoid duplicates
         setOnlineUsers((prevUsers) => {
           if (!prevUsers.some(u => u.id === userId)) {
             return [...prevUsers, { id: userId, username }];
@@ -118,7 +116,7 @@ function ChatPage({ isAuthenticated, onLogout }) {
     // Update online users list (sent on joinChannel and on updates)
     socketRef.current.on('onlineUsersUpdate', ({ channel, users }) => {
         if (channel === currentChannel) {
-            setOnlineUsers(users); // Replace the list with the updated one
+            setOnlineUsers(users);
         }
     });
 
@@ -134,7 +132,8 @@ function ChatPage({ isAuthenticated, onLogout }) {
         socketRef.current.disconnect();
       }
     };
-  }, [isAuthenticated, token, navigate, currentChannel]); // currentChannel in dependencies to re-join on change
+    // The dependency array:
+  }, [isAuthenticated, token, navigate, currentChannel, handleLogout]); // <-- This is the fixed line!
 
   // Scroll to bottom of messages whenever messages update
   useEffect(() => {
